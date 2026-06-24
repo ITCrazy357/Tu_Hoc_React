@@ -14,6 +14,7 @@ function ExpenseForm() {
       alert("Please fill in all fields.");
       return;
     }
+
     const newExpense: Omit<Expense, "id"> = {
       title,
       amount,

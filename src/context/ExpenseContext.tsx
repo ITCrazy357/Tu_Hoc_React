@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback, useMemo } from "react";
+import { createContext, useCallback, useMemo } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 import type { Expense } from "../types/expense";
