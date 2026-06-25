@@ -1,4 +1,5 @@
 import type { Expense } from "../types/expense";
+import StatCard from "./StatCard";
 
 const currencyFormatter = new Intl.NumberFormat("vi-VN", {
   style: "currency",
@@ -18,20 +19,11 @@ export function Dashboard({ expenses }: DashboardProps) {
 
   return (
     <div>
-      <h2>
-        Tổng:
-        {currencyFormatter.format(total)}
-      </h2>
+      <StatCard title="Tổng chi tiêu" value={currencyFormatter.format(total)} />
 
-      <h2>
-        Giao dịch:
-        {count}
-      </h2>
+      <StatCard title="Giao dịch" value={count} />
 
-      <h2>
-        Trung bình:
-        {currencyFormatter.format(average)}
-      </h2>
+      <StatCard title="Trung bình" value={currencyFormatter.format(average)} />
     </div>
   );
 }

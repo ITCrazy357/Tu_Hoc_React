@@ -9,6 +9,8 @@ import {
 
 import type { Expense } from "../types/expense";
 
+import { useMemo } from "react";
+
 import { formatCurrency } from "../utils/formatCurrency";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
@@ -18,19 +20,23 @@ interface ExpensesChartProps {
 }
 
 export function ExpensesChart({ expenses }: ExpensesChartProps) {
-  const categoryMap: Record<string, number> = {};
+  const chartData = useMemo(() => {
+    const categoryMap: Record<string, number> = {};
 
-  expenses.forEach((expense) => {
-    if (!categoryMap[expense.category]) {
-      categoryMap[expense.category] = 0;
-    }
-    categoryMap[expense.category] += expense.amount;
-  });
+    expenses.forEach((expense) => {
+      categoryMap[expense.category] =
+        (categoryMap[expense.category] || 0) + expense.amount;
+    });
 
-  const chartData = Object.entries(categoryMap).map(([name, value]) => ({
-    name,
-    value,
-  }));
+    return Object.entries(categoryMap).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }, [expenses]);
+
+  if (expenses.length === 0) {
+    return <p>Chưa có dữ liệu để thống kê</p>;
+  }
 
   return (
     <div style={{ width: "100%", height: 400, marginTop: "2rem" }}>
