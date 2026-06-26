@@ -1,6 +1,7 @@
 import { Dashboard } from "../components/Dashboard";
 import ExpenseChart from "../components/ExpenseChart";
 import { useExpenses } from "../hooks/useExpenses";
+import MainLayout from "../layouts/MainLayout";
 
 function DashboardPage() {
   const { expenses } = useExpenses();
@@ -15,10 +16,10 @@ function DashboardPage() {
   }
 
   return (
-    <>
+    <MainLayout>
       <Dashboard expenses={expenses} />
       <ExpenseChart expenses={expenses} />
-    </>
+    </MainLayout>
   );
 }
 

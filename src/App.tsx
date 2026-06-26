@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import DashboardPage from "./pages/DashboardPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import ReportPage from "./pages/ReportPage";
@@ -7,7 +6,6 @@ import ReportPage from "./pages/ReportPage";
 function App() {
   return (
     <div className="container">
-      <Navbar />
       <main>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
