@@ -1,40 +1,34 @@
-import { useState } from "react";
-import type { Expense } from "../types/expense";
-import { useExpenses } from "../hooks/useExpenses";
+import { useForm } from "react-hook-form";
 import { categories } from "../constants/categories";
+import { useExpenses } from "../hooks/useExpenses";
+import type { Expense } from "../types/expense";
+
+type ExpenseFormData = Omit<Expense, "id">;
+
+const defaultValues: ExpenseFormData = {
+  title: "",
+  amount: 0,
+  category: categories[0],
+  date: "",
+};
 
 function ExpenseForm() {
   const { addExpense } = useExpenses();
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState<number>(0);
-  const [category, setCategory] = useState<Expense["category"]>("Food");
-  const [date, setDate] = useState("");
 
-  const handleAddExpense = () => {
-    if (!title || amount <= 0 || !date) {
-      alert("Please fill in all fields.");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ExpenseFormData>({ defaultValues });
 
-    const newExpense: Omit<Expense, "id"> = {
-      title,
-      amount,
-      category,
-      date,
-    };
-    addExpense(newExpense);
-    setTitle("");
-    setAmount(0);
-    setDate("");
+  const onSubmit = (data: ExpenseFormData) => {
+    addExpense(data);
+    reset();
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleAddExpense();
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Add a New Expense</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="form-group">
@@ -43,9 +37,11 @@ function ExpenseForm() {
             type="text"
             className="form-control"
             placeholder="Expense name"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            {...register("title", {
+              required: "Enter expense name",
+            })}
           />
+          {errors.title && <p>{errors.title.message}</p>}
         </div>
 
         <div className="form-group">
@@ -54,18 +50,17 @@ function ExpenseForm() {
             type="number"
             className="form-control"
             placeholder="Amount"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
+            {...register("amount", {
+              valueAsNumber: true,
+              validate: (value) => value > 0 || "Amount must be greater than 0",
+            })}
           />
+          {errors.amount && <p>{errors.amount.message}</p>}
         </div>
 
         <div className="form-group">
           <label>Category</label>
-          <select
-            className="form-control"
-            value={category}
-            onChange={(e) => setCategory(e.target.value as Expense["category"])}
-          >
+          <select className="form-control" {...register("category")}>
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -79,9 +74,11 @@ function ExpenseForm() {
           <input
             type="date"
             className="form-control"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            {...register("date", {
+              required: "Select date",
+            })}
           />
+          {errors.date && <p>{errors.date.message}</p>}
         </div>
 
         <div className="md:col-span-2">
