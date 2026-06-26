@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { Expense } from "../types/expense";
 import { useExpenses } from "../hooks/useExpenses";
+import { categories } from "../constants/categories";
 
 function ExpenseForm() {
   const { addExpense } = useExpenses();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState<number>(0);
-  const [category, setCategory] = useState("Food");
+  const [category, setCategory] = useState<Expense["category"]>("Food");
   const [date, setDate] = useState("");
 
   const handleAddExpense = () => {
@@ -63,12 +64,13 @@ function ExpenseForm() {
           <select
             className="form-control"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => setCategory(e.target.value as Expense["category"])}
           >
-            <option value="Food">Food</option>
-            <option value="Transport">Transport</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Entertainment">Entertainment</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
         </div>
 
